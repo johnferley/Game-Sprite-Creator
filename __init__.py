@@ -87,7 +87,7 @@ bl_info = {
 #       Check parent origins
 
 import bpy
-from . addon import *
+from . game_sprite_addon import *
 
 classes = (
     AddonProperties,
