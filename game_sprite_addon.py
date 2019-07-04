@@ -13,8 +13,6 @@ except ImportError:
     pil_installed = False
 
 # Declare constants
-ORTHO_SCALE_NORM = 1
-ORTHO_SCALE_DIME = math.sqrt(ORTHO_SCALE_NORM**2 + ORTHO_SCALE_NORM**2)
 ORIGIN = mathutils.Vector((0.0,0.0,0.0))
 
 # Declare properties to be used by the addon
@@ -31,6 +29,10 @@ class AddonProperties(bpy.types.PropertyGroup):
         default = 1,
         min = 0,
         max = 1)
+    float_object_size: bpy.props.FloatProperty(
+        name = "Object Size",
+        description = "The size of a cube fitting the object being rendered.",
+        default = 1)
     pointer_top_parent: bpy.props.PointerProperty(
         name = "Top Down",
         description = "The top down camera rig parent.",
@@ -381,7 +383,7 @@ class CreateTopCamera_OT_Operator(bpy.types.Operator):
         cam.name = "Camera_TopDown"
         cam.rotation_euler = (math.radians(45),math.radians(0),math.radians(0))
         cam.data.type = 'ORTHO'
-        ortho_scale = ORTHO_SCALE_NORM
+        ortho_scale = addon_prop.float_object_size
         if addon_prop.float_object_ratio > 0 and addon_prop.float_object_ratio < 1:
             ortho_scale = ortho_scale / addon_prop.float_object_ratio
         cam.data.ortho_scale = ortho_scale
@@ -400,6 +402,8 @@ class CreateDimeCamera_OT_Operator(bpy.types.Operator):
     def execute(self, context):
         addon_prop = context.scene.addon_properties
 
+        orth_scale_dime = math.sqrt(addon_prop.float_object_size**2 + addon_prop.float_object_size**2)
+
         # Create a Dimetric (2:1 Isometric) Camera
         bpy.ops.object.camera_add(location=ORIGIN)
         cam = bpy.context.active_object
@@ -407,7 +411,7 @@ class CreateDimeCamera_OT_Operator(bpy.types.Operator):
         cam.name = "Camera_Dimetric"
         cam.rotation_euler = (math.radians(60),math.radians(0),math.radians(45))
         cam.data.type = 'ORTHO'
-        ortho_scale = ORTHO_SCALE_DIME
+        ortho_scale = orth_scale_dime
         if addon_prop.float_object_ratio > 0 and addon_prop.float_object_ratio < 1:
             ortho_scale = ortho_scale / addon_prop.float_object_ratio
         cam.data.ortho_scale = ortho_scale
@@ -432,7 +436,7 @@ class CreateSideCamera_OT_Operator(bpy.types.Operator):
         cam.name = "Camera_Side"
         cam.rotation_euler = (math.radians(90),math.radians(0),math.radians(0))
         cam.data.type = 'ORTHO'
-        ortho_scale = ORTHO_SCALE_NORM
+        ortho_scale = addon_prop.float_object_size
         if addon_prop.float_object_ratio > 0 and addon_prop.float_object_ratio < 1:
             ortho_scale = ortho_scale / addon_prop.float_object_ratio
         cam.data.ortho_scale = ortho_scale
@@ -457,7 +461,7 @@ class CreateBirdCamera_OT_Operator(bpy.types.Operator):
         cam.name = "Camera_BirdsEye"
         cam.rotation_euler = (math.radians(270),math.radians(0),math.radians(0))
         cam.data.type = 'ORTHO'
-        ortho_scale = ORTHO_SCALE_NORM
+        ortho_scale = addon_prop.float_object_size
         if addon_prop.float_object_ratio > 0 and addon_prop.float_object_ratio < 1:
             ortho_scale = ortho_scale / addon_prop.float_object_ratio
         cam.data.ortho_scale = ortho_scale
@@ -775,6 +779,7 @@ class ADDON_PT_ScenePanel(bpy.types.Panel):
         col = layout.column(align=True)
         col.label(text="Create Preset Camera:")
         col.prop(addon_prop, 'float_object_ratio')
+        col.prop(addon_prop, 'float_object_size')
         col.menu('OBJECT_MT_CameraMenu', text="Add", icon='ADD')
 
 # The render setup sub panel
