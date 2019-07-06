@@ -192,4 +192,7 @@ It is recommended to display the System Console using the Window>Toggle System C
 It is also only possible to cancel the operation by forcing Blender to close, so the file must be saved before starting the rendering process.
 The render button will be disabled until the file has been saved.
 
-Large numbers of objects and long animations can cause the rendering process to take a long time.
+Large numbers of objects and long animations can cause the rendering process to take a long time
+
+## License
+See [LICENSE.md](../master/LICENSE)
