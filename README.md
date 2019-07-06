@@ -196,3 +196,5 @@ Large numbers of objects and long animations can cause the rendering process to 
 
 ## License
 See [LICENSE.md](../master/LICENSE)
+
+The character and animations included in the example files are from Mixamo.
