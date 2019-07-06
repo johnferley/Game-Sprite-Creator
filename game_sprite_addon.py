@@ -93,11 +93,6 @@ class AddonProperties(bpy.types.PropertyGroup):
         subtype = 'DIR_PATH',
         default = "")
 
-    bool_auto_folder: bpy.props.BoolProperty(
-        name = "Auto Folder Creation",
-        description = "If enabled images will be added to sub-folders based on the scene hierarchy.",
-        default = False)
-
 
 def find_children(parent_obj, obj_type=None):
     """Search child objects for object of specific type.
@@ -698,12 +693,8 @@ class RenderSprites_OT_Operator(bpy.types.Operator):
                                     # Rotate camera
                                     cam.rotation_euler.z = math.radians(i_angle * (360 / addon_prop.int_camera_angles))
                                     # Set render path
-                                    # If folder creation is enabled, add to folder:
                                     # <sprite_sheet_name>\<object_name>\<camera_name>\<angle>\<track_name>
-                                    if addon_prop.bool_auto_folder:
-                                        output_folder = "{}{}\\{}\\{}\\{}\\{}\\".format(addon_prop.string_output_path, sheet_name, obj.name, track.name, cam.name, int(i_angle * (360 / addon_prop.int_camera_angles)))
-                                    else:
-                                        output_folder = addon_prop.string_output_path
+                                    output_folder = "{}{}\\{}\\{}\\{}\\{}\\".format(addon_prop.string_output_path, sheet_name, obj.name, track.name, cam.name, int(i_angle * (360 / addon_prop.int_camera_angles)))
                                     # Get nla track start and end frames
                                     strips = track.strips
                                     anim_start = None
@@ -782,12 +773,8 @@ class RenderSprites_OT_Operator(bpy.types.Operator):
                                 # Rotate camera
                                 cam.rotation_euler.z = math.radians(i_angle * (360 / addon_prop.int_camera_angles))
                                 # Set render path
-                                # If folder creation is enabled, add to folder:
                                 # <sprite_sheet_name>\<object_name>\<camera_name>\<angle>
-                                if addon_prop.bool_auto_folder:
-                                    output_folder = "{}{}\\{}\\{}\\".format(addon_prop.string_output_path, sheet_name, obj.name, cam.name)
-                                else:
-                                    output_folder = addon_prop.string_output_path
+                                output_folder = "{}{}\\{}\\{}\\".format(addon_prop.string_output_path, sheet_name, obj.name, cam.name)
                                 # Set render file name
                                 # Each render will have the format:
                                 # <sprite_sheet_name>_<object_name>_<cam_name>_<angle>.png
@@ -1005,9 +992,6 @@ class ADDON_PT_RenderPanel(bpy.types.Panel):
         if not error == None:
             box = col.box()
             box.label(text=error)
-
-        col = layout.column(align=True)
-        col.prop(addon_prop, 'bool_auto_folder')
 
         col = layout.column(align=True)
         row = col.row(align=True)
