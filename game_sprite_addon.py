@@ -2,8 +2,6 @@ import bpy
 import mathutils
 import math
 import os
-import numpy
-import time
 
 pil_installed = True
 try:
@@ -820,8 +818,8 @@ class RenderSprites_OT_Operator(bpy.types.Operator):
                     obj.hide_render = True
                     for child in find_children(obj):
                         child.hide_render = True
-                # If not 'OFF' merge objects into sheet
-                if addon_prop.enum_sprite_sheet != 'OFF':
+                # If not 'OFF' or 'OBJECT' merge objects into sheet
+                if addon_prop.enum_sprite_sheet != 'OFF' and addon_prop.enum_sprite_sheet != 'OBJECT':
                     source_folder = "{}{}\\".format(addon_prop.string_output_path, sheet_name)
                     save_folder = "{}".format(addon_prop.string_output_path)
                     save_name = "{}{}".format(sheet_name, scn.render.file_extension)
@@ -829,6 +827,7 @@ class RenderSprites_OT_Operator(bpy.types.Operator):
                     # If renders not being kept, remove them
                     if addon_prop.bool_keep_renders == False:
                         remove_folder(source_folder)
+
             print("Done")
             print("")
             # Clean Up
