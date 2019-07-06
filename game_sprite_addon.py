@@ -377,7 +377,19 @@ def validate_sprite_dropdown(caller, context):
     return error
 
 
-# Validate all properties
+def validate_render(caller, context):
+    """Only enable the render button if the file has been saved"""
+
+    error = None
+
+    if not bpy.data.is_saved:
+        error = "* The file has not been saved."
+    elif bpy.data.is_dirty:
+        error = "* There are unsaved changes"
+
+    return error
+
+
 def validate_settings(caller, context):
     """Run all validation functions, returning True if the all pass."""
 
@@ -996,7 +1008,13 @@ class ADDON_PT_RenderPanel(bpy.types.Panel):
         col = layout.column(align=True)
         row = col.row(align=True)
         row.operator('view3d.render_sprites', icon='RENDER_RESULT')
-        row.enabled = validate_settings(self, context)
-        if not row.enabled:
+        error = validate_render(self, context)
+        if not error == None:
+            box = col.box()
+            box.label(text=error)
+            row.enabled = False
+        input_ok = validate_settings(self, context)
+        if not input_ok:
             box = col.box()
             box.label(text="* Check for errors above")
+            row.enabled = False
