@@ -113,11 +113,11 @@ def find_children(parent_obj, obj_type=None):
 
 
 def merge_images(folder_path, save_path, direction='HORIZONTAL'):
-    """Merge all images in a folder spedified by folder_path.
+    """Merge all images in a folder specified by folder_path.
     Resulting image will be saved to a new folder save_path.
     The direction specifies which direction the images should be merged:
-        'HORIZONTAL': Merge the iamges horizontally.
-        'VERTICAL': Merge the images vertically.
+        'HORIZONTAL': Arrange the images horizontally.
+        'VERTICAL': Arrange the images vertically.
     The function returns the new image as a PIL Image.
     """
 
@@ -453,9 +453,12 @@ class CreateDimeTemplate_OT_Operator(bpy.types.Operator):
         return {'FINISHED'}
 
 
-# Create a camera set up ready for use as a Top Down Camera, such as in calssic JRPG's
-# Scale of 1 will fit a 1x1x1 cube horizontally
 class CreateTopCamera_OT_Operator(bpy.types.Operator):
+    """Create a top down orthographic camera at the origin.
+    This points at 45 degrees from vertical.
+    The orthographic scale is set based on the specified object size and ratio.
+    """
+
     bl_idname = 'view3d.create_top_camera'
     bl_label = "Top Down Camera"
     bl_description = "Create a top down camera."
@@ -471,7 +474,9 @@ class CreateTopCamera_OT_Operator(bpy.types.Operator):
         cam.name = "Camera_TopDown"
         cam.rotation_euler = (math.radians(45), math.radians(0), math.radians(0))
         cam.data.type = 'ORTHO'
+        # Initialise the scale based on object size
         ortho_scale = addon_prop.float_object_size
+        # Adjust the scale based on the required ratio
         if addon_prop.float_object_ratio > 0 and addon_prop.float_object_ratio < 1:
             ortho_scale = ortho_scale / addon_prop.float_object_ratio
         cam.data.ortho_scale = ortho_scale
@@ -479,10 +484,12 @@ class CreateTopCamera_OT_Operator(bpy.types.Operator):
         return {'FINISHED'}
 
 
-# Create a camera set uup ready for use as a Dimetric camera, otherwise known as a 2:1 isometric camera,
-# commonly used in strategy games
-# Scale of 1.415 will fit a 1x1x1 cube horizontally
 class CreateDimeCamera_OT_Operator(bpy.types.Operator):
+    """Create a dimetric orthographic camera at the origin.
+    This uses an angle of 60 degrees from vertical to create a 2:1 Isometric view.
+    The orthographic scale is set based on the specified object size and ratio.
+    """
+
     bl_idname = 'view3d.create_dime_camera'
     bl_label = "Dimetric Camera"
     bl_description = "Create a dimetric (2:1 isometric) camera."
@@ -500,7 +507,9 @@ class CreateDimeCamera_OT_Operator(bpy.types.Operator):
         cam.name = "Camera_Dimetric"
         cam.rotation_euler = (math.radians(60), math.radians(0), math.radians(45))
         cam.data.type = 'ORTHO'
+        # Initialise the scale based on object size
         ortho_scale = orth_scale_dime
+        # Adjust the scale based on the required ratio
         if addon_prop.float_object_ratio > 0 and addon_prop.float_object_ratio < 1:
             ortho_scale = ortho_scale / addon_prop.float_object_ratio
         cam.data.ortho_scale = ortho_scale
@@ -508,9 +517,12 @@ class CreateDimeCamera_OT_Operator(bpy.types.Operator):
         return {'FINISHED'}
 
 
-# Create a side view camera, like the cameras used in side scrolling platformers
-# Scale of 1 will fit a 1x1x1 cube horizontally
 class CreateSideCamera_OT_Operator(bpy.types.Operator):
+    """Create a side orthographic camera at the origin.
+    This points horizontally.
+    The orthographic scale is set based on the specified object size and ratio.
+    """
+
     bl_idname = 'view3d.create_side_camera'
     bl_label = "Side View Camera"
     bl_description = "Create a side view camera."
@@ -526,7 +538,9 @@ class CreateSideCamera_OT_Operator(bpy.types.Operator):
         cam.name = "Camera_Side"
         cam.rotation_euler = (math.radians(90), math.radians(0), math.radians(0))
         cam.data.type = 'ORTHO'
+        # Initialise the scale based on object size
         ortho_scale = addon_prop.float_object_size
+        # Adjust the scale based on the required ratio
         if addon_prop.float_object_ratio > 0 and addon_prop.float_object_ratio < 1:
             ortho_scale = ortho_scale / addon_prop.float_object_ratio
         cam.data.ortho_scale = ortho_scale
@@ -534,9 +548,12 @@ class CreateSideCamera_OT_Operator(bpy.types.Operator):
         return {'FINISHED'}
 
 
-# Create a birds eye view camera, commonly used in twin stick shooters and bullet hell games
-# Scale of 1 will fit a 1x1x1 cube horizontally
 class CreateBirdCamera_OT_Operator(bpy.types.Operator):
+    """Create a birds eye view orthographic camera at the origin.
+    This points vertically downwards.
+    The orthographic scale is set based on the specified object size and ratio.
+    """
+
     bl_idname = 'view3d.create_bird_camera'
     bl_label = "Bird's Eye View Camera"
     bl_description = "Create a bird's eye view camera."
@@ -552,7 +569,9 @@ class CreateBirdCamera_OT_Operator(bpy.types.Operator):
         cam.name = "Camera_BirdsEye"
         cam.rotation_euler = (math.radians(270), math.radians(0), math.radians(0))
         cam.data.type = 'ORTHO'
+        # Initialise the scale based on object size
         ortho_scale = addon_prop.float_object_size
+        # The orthographic scale is set based on the specified object size and ratio.
         if addon_prop.float_object_ratio > 0 and addon_prop.float_object_ratio < 1:
             ortho_scale = ortho_scale / addon_prop.float_object_ratio
         cam.data.ortho_scale = ortho_scale
@@ -560,9 +579,12 @@ class CreateBirdCamera_OT_Operator(bpy.types.Operator):
         return {'FINISHED'}
 
 
-# Create a birds eye view camera, commonly used in twin stick shooters and bullet hell games
-# Scale of 1 will fit a 1x1x1 cube horizontally
 class LoadExample_OT_Operator(bpy.types.Operator):
+    """Load an example scene for use during testing.
+    The file is opened from the blender folder when normally.
+    When run from the IDE this is loaded from this programs folder.
+    """
+
     bl_idname = 'view3d.load_example'
     bl_label = "Load Example Scene"
     bl_description = "Load an example scene."
@@ -577,8 +599,13 @@ class LoadExample_OT_Operator(bpy.types.Operator):
         return {'FINISHED'}
 
 
-# Render the sprites as per the settings chosen
 class RenderSprites_OT_Operator(bpy.types.Operator):
+    """Render the sprites as per the chosen settings.
+    It loops through the sheets, objects, tracks and frames, rendering each frame.
+    If enabled, it then merges the images into sprite sheets.
+    Finally, it sets the scene back to its original state as best as possible.
+    """
+
     bl_idname = 'view3d.render_sprites'
     bl_label = "Render Sprites"
     bl_description = "Render sprites based on selected options and scene setup."
@@ -823,8 +850,9 @@ class RenderSprites_OT_Operator(bpy.types.Operator):
             return {'CANCELLED'}
 
 
-# The template creation dropdown
 class OBJECT_MT_TemplateMenu(bpy.types.Menu):
+    """The Create Template dropdown menu"""
+
     bl_idname = 'OBJECT_MT_TemplateMenu'
     bl_name = "Create Template"
     bl_label = "Create Template"
@@ -839,6 +867,8 @@ class OBJECT_MT_TemplateMenu(bpy.types.Menu):
 
 # The camera creation dropdown
 class OBJECT_MT_CameraMenu(bpy.types.Menu):
+    """The Create Camera dropdown menu"""
+
     bl_idname = 'OBJECT_MT_CameraMenu'
     bl_name = "Create Camera"
     bl_label = "Create Camera"
@@ -855,6 +885,8 @@ class OBJECT_MT_CameraMenu(bpy.types.Menu):
 
 # The scene setup sub panel
 class ADDON_PT_ScenePanel(bpy.types.Panel):
+    """The Scene Setup panel"""
+
     bl_idname = 'ADDON_PT_scenepanel'
     bl_label = "Scene Setup"
     bl_space_type = 'VIEW_3D'
@@ -880,6 +912,8 @@ class ADDON_PT_ScenePanel(bpy.types.Panel):
 
 # The render setup sub panel
 class ADDON_PT_SetupPanel(bpy.types.Panel):
+    """The Render Setup panel"""
+
     bl_idname = 'ADDON_PT_setuppanel'
     bl_label = "Render Setup"
     bl_space_type = 'VIEW_3D'
@@ -953,6 +987,8 @@ class ADDON_PT_SetupPanel(bpy.types.Panel):
 
 # The render sprites sub panel
 class ADDON_PT_RenderPanel(bpy.types.Panel):
+    """The Render Sprites panel"""
+
     bl_idname = 'ADDON_PT_renderpanel'
     bl_label = "Render Sprites"
     bl_space_type = 'VIEW_3D'
