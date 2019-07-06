@@ -41,15 +41,18 @@ classes = (
     ADDON_PT_SetupPanel,
     ADDON_PT_RenderPanel)
 
+
 def register():
     for cls in classes:
         bpy.utils.register_class(cls)
     bpy.types.Scene.addon_properties = bpy.props.PointerProperty(type=AddonProperties)
 
+
 def unregister():
     for cls in reversed(classes):
         bpy.utils.unregister_class(cls)
     del bpy.types.Scene.addon_properties
+
 
 if __name__ == '__main__':
     register()
