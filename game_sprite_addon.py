@@ -39,24 +39,24 @@ class AddonProperties(bpy.types.PropertyGroup):
         description = "The size of a cube fitting the object being rendered.",
         default = 1)
 
-    pointer_top_parent: bpy.props.PointerProperty(
-        name = "Top Down",
-        description = "The top down camera rig parent.",
+    pointer_camera_one: bpy.props.PointerProperty(
+        name = "Camera 1",
+        description = "Camera rig parent.",
         type = bpy.types.Object)
 
-    pointer_dime_parent: bpy.props.PointerProperty(
-        name = "Dimetric",
-        description = "The dimetric (2:1 isometric) camera rig parent.",
+    pointer_camera_two: bpy.props.PointerProperty(
+        name = "Camera 2",
+        description = "Camera rig parent.",
         type = bpy.types.Object)
 
-    pointer_side_parent: bpy.props.PointerProperty(
-        name = "Side View",
-        description = "The side view camera rig parent.",
+    pointer_camera_three: bpy.props.PointerProperty(
+        name = "Camera 3",
+        description = "Camera rig parent.",
         type = bpy.types.Object)
 
-    pointer_bird_parent: bpy.props.PointerProperty(
-        name = "Bird's Eye View",
-        description = "The birds eye view camera rig parent.",
+    pointer_camera_four: bpy.props.PointerProperty(
+        name = "Camera 4",
+        description = "Camera rig parent.",
         type = bpy.types.Object)
 
     pointer_output_parent: bpy.props.PointerProperty(
@@ -129,9 +129,9 @@ def merge_images(folder_path, save_path, direction='HORIZONTAL'):
     image_paths = []
     for file in os.listdir(folder_path):
         file_name = os.fsdecode(file)
-        print(''.join(folder_path, "\\", file_name))
+        print(''.join((folder_path, "\\", file_name)))
         if file_name.endswith('.png'):
-            image_paths.append(''.join(folder_path, "\\", file_name))
+            image_paths.append(''.join((folder_path, "\\", file_name)))
 
     images = []
     for file in image_paths:
@@ -173,7 +173,7 @@ def remove_folder(folder_path):
 
     for file in os.listdir(folder_path):
         file_name = os.fsdecode(file)
-        os.remove(''.join(folder_path, "\\", file_name))
+        os.remove(''.join((folder_path, "\\", file_name)))
     os.rmdir(folder_path)
 
 
@@ -187,18 +187,18 @@ def validate_camera_parent(caller, context):
 
     error = None
 
-    if (addon_prop.pointer_top_parent == None
-            and addon_prop.pointer_dime_parent == None
-            and addon_prop.pointer_side_parent == None
-            and addon_prop.pointer_bird_parent == None):
+    if (addon_prop.pointer_camera_one == None
+            and addon_prop.pointer_camera_two == None
+            and addon_prop.pointer_camera_three == None
+            and addon_prop.pointer_camera_four == None):
         error = "* At least one camera parent must be selected"
 
     return error
 
 
 # Validate the top parent selection
-def validate_top_parent(caller, context):
-    """Validate the top camera parent selection box.
+def validate_camera_one(caller, context):
+    """Validate the first camera parent selection box.
     The parent must be an Empty object, positioned at the origin.
     There must be a child Camera object.
     """
@@ -207,20 +207,20 @@ def validate_top_parent(caller, context):
 
     error = None
 
-    if addon_prop.pointer_top_parent != None:
-        if addon_prop.pointer_top_parent.type != 'EMPTY':
-            error = "* {0} must be an empty".format(addon_prop.pointer_top_parent.name)
-        elif addon_prop.pointer_top_parent.location != ORIGIN:
-            error = "* {0} must be at ({1},{2},{3})".format(addon_prop.pointer_top_parent.name, ORIGIN[0], ORIGIN[1], ORIGIN[2])
-        elif len(find_children(addon_prop.pointer_top_parent, 'CAMERA')) == 0:
-            error = "* {0} does not have a child camera".format(addon_prop.pointer_top_parent.name)
+    if addon_prop.pointer_camera_one != None:
+        if addon_prop.pointer_camera_one.type != 'EMPTY':
+            error = "* {0} must be an empty".format(addon_prop.pointer_camera_one.name)
+        elif addon_prop.pointer_camera_one.location != ORIGIN:
+            error = "* {0} must be at ({1},{2},{3})".format(addon_prop.pointer_camera_one.name, ORIGIN[0], ORIGIN[1], ORIGIN[2])
+        elif len(find_children(addon_prop.pointer_camera_one, 'CAMERA')) == 0:
+            error = "* {0} does not have a child camera".format(addon_prop.pointer_camera_one.name)
 
     return error
 
 
 # Validate the dimetric parent selection
-def validate_dime_parent(caller, context):
-    """Validate the dimetric camera parent selection box.
+def validate_camera_two(caller, context):
+    """Validate the second camera parent selection box.
     The parent must be an Empty object, positioned at the origin.
     There must be a child Camera object.
     """
@@ -229,20 +229,20 @@ def validate_dime_parent(caller, context):
 
     error = None
 
-    if addon_prop.pointer_dime_parent != None:
-        if addon_prop.pointer_dime_parent.type != 'EMPTY':
-            error = "* {0} must be an empty".format(addon_prop.pointer_dime_parent.name)
-        elif addon_prop.pointer_dime_parent.location != ORIGIN:
-            error = "* {0} must be at ({1},{2},{3})".format(addon_prop.pointer_dime_parent.name, ORIGIN[0], ORIGIN[1], ORIGIN[2])
-        elif len(find_children(addon_prop.pointer_dime_parent, 'CAMERA')) == 0:
-            error = "* {0} does not have a child camera".format(addon_prop.pointer_dime_parent.name)
+    if addon_prop.pointer_camera_two != None:
+        if addon_prop.pointer_camera_two.type != 'EMPTY':
+            error = "* {0} must be an empty".format(addon_prop.pointer_camera_two.name)
+        elif addon_prop.pointer_camera_two.location != ORIGIN:
+            error = "* {0} must be at ({1},{2},{3})".format(addon_prop.pointer_camera_two.name, ORIGIN[0], ORIGIN[1], ORIGIN[2])
+        elif len(find_children(addon_prop.pointer_camera_two, 'CAMERA')) == 0:
+            error = "* {0} does not have a child camera".format(addon_prop.pointer_camera_two.name)
 
     return error
 
 
 # Validate the side parent selection
-def validate_side_parent(caller, context):
-    """Validate the side camera parent selection box.
+def validate_camera_three(caller, context):
+    """Validate the third camera parent selection box.
     The parent must be an Empty object, positioned at the origin.
     There must be a child Camera object.
     """
@@ -251,20 +251,20 @@ def validate_side_parent(caller, context):
 
     error = None
 
-    if addon_prop.pointer_side_parent != None:
-        if addon_prop.pointer_side_parent.type != 'EMPTY':
-            error = "* {0} must be an empty".format(addon_prop.pointer_side_parent.name)
-        elif addon_prop.pointer_side_parent.location != ORIGIN:
-            error = "* {0} must be at ({1},{2},{3})".format(addon_prop.pointer_side_parent.name, ORIGIN[0], ORIGIN[1], ORIGIN[2])
-        elif len(find_children(addon_prop.pointer_side_parent, 'CAMERA')) == 0:
-            error = "* {0} does not have a child camera".format(addon_prop.pointer_side_parent.name)
+    if addon_prop.pointer_camera_three != None:
+        if addon_prop.pointer_camera_three.type != 'EMPTY':
+            error = "* {0} must be an empty".format(addon_prop.pointer_camera_three.name)
+        elif addon_prop.pointer_camera_three.location != ORIGIN:
+            error = "* {0} must be at ({1},{2},{3})".format(addon_prop.pointer_camera_three.name, ORIGIN[0], ORIGIN[1], ORIGIN[2])
+        elif len(find_children(addon_prop.pointer_camera_three, 'CAMERA')) == 0:
+            error = "* {0} does not have a child camera".format(addon_prop.pointer_camera_three.name)
 
     return error
 
 
 # Validate the bird's eye view parent selection
-def validate_bird_parent(caller, context):
-    """Validate the bird's eye view camera parent selection box.
+def validate_camera_four(caller, context):
+    """Validate the fourth camera parent selection box.
     The parent must be an Empty object, positioned at the origin.
     There must be a child Camera object.
     """
@@ -273,13 +273,13 @@ def validate_bird_parent(caller, context):
 
     error = None
 
-    if addon_prop.pointer_bird_parent != None:
-        if addon_prop.pointer_bird_parent.type != 'EMPTY':
-            error = "* {0} must be an empty".format(addon_prop.pointer_bird_parent.name)
-        elif addon_prop.pointer_bird_parent.location != ORIGIN:
-            error = "* {0} must be at ({1},{2},{3})".format(addon_prop.pointer_bird_parent.name, ORIGIN[0], ORIGIN[1], ORIGIN[2])
-        elif len(find_children(addon_prop.pointer_bird_parent, 'CAMERA')) == 0:
-            error = "* {0} does not have a child camera".format(addon_prop.pointer_bird_parent.name)
+    if addon_prop.pointer_camera_four != None:
+        if addon_prop.pointer_camera_four.type != 'EMPTY':
+            error = "* {0} must be an empty".format(addon_prop.pointer_camera_four.name)
+        elif addon_prop.pointer_camera_four.location != ORIGIN:
+            error = "* {0} must be at ({1},{2},{3})".format(addon_prop.pointer_camera_four.name, ORIGIN[0], ORIGIN[1], ORIGIN[2])
+        elif len(find_children(addon_prop.pointer_camera_four, 'CAMERA')) == 0:
+            error = "* {0} does not have a child camera".format(addon_prop.pointer_camera_four.name)
 
     return error
 
@@ -389,10 +389,10 @@ def validate_settings(caller, context):
     ok = False
 
     if (validate_camera_parent(caller, context) == None
-            and validate_top_parent(caller, context) == None
-            and validate_dime_parent(caller, context) == None
-            and validate_side_parent(caller, context) == None
-            and validate_bird_parent(caller, context) == None
+            and validate_camera_one(caller, context) == None
+            and validate_camera_two(caller, context) == None
+            and validate_camera_three(caller, context) == None
+            and validate_camera_four(caller, context) == None
             and validate_output_parent(caller, context) == None
             and validate_output_path(caller, context) == None
             and validate_sprite_dropdown(caller, context) == None):
@@ -572,7 +572,7 @@ class LoadExample_OT_Operator(bpy.types.Operator):
 
         # Load Scene
         folder = os.getcwd()
-        bpy.ops.wm.open_mainfile(filepath=''.join(folder, "\\example.blend"))
+        bpy.ops.wm.open_mainfile(filepath=''.join((folder, "\\example.blend")))
 
         return {'FINISHED'}
 
@@ -606,18 +606,18 @@ class RenderSprites_OT_Operator(bpy.types.Operator):
             output = addon_prop.pointer_output_parent
             cameras = []
             cam_orig_rotation = []
-            if addon_prop.pointer_top_parent != None:
-                cameras.append(addon_prop.pointer_top_parent)
-                cam_orig_rotation.append(addon_prop.pointer_top_parent.rotation_euler)
-            if addon_prop.pointer_dime_parent != None:
-                cameras.append(addon_prop.pointer_dime_parent)
-                cam_orig_rotation.append(addon_prop.pointer_dime_parent.rotation_euler)
-            if addon_prop.pointer_side_parent != None:
-                cameras.append(addon_prop.pointer_side_parent)
-                cam_orig_rotation.append(addon_prop.pointer_side_parent.rotation_euler)
-            if addon_prop.pointer_bird_parent != None:
-                cameras.append(addon_prop.pointer_bird_parent)
-                cam_orig_rotation.append(addon_prop.pointer_bird_parent.rotation_euler)
+            if addon_prop.pointer_camera_one != None:
+                cameras.append(addon_prop.pointer_camera_one)
+                cam_orig_rotation.append(addon_prop.pointer_camera_one.rotation_euler)
+            if addon_prop.pointer_camera_two != None:
+                cameras.append(addon_prop.pointer_camera_two)
+                cam_orig_rotation.append(addon_prop.pointer_camera_two.rotation_euler)
+            if addon_prop.pointer_camera_three != None:
+                cameras.append(addon_prop.pointer_camera_three)
+                cam_orig_rotation.append(addon_prop.pointer_scamera_three.rotation_euler)
+            if addon_prop.pointer_camera_four != None:
+                cameras.append(addon_prop.pointer_camera_four)
+                cam_orig_rotation.append(addon_prop.pointer_camera_four.rotation_euler)
             # 2d array, where each row represents the sprite sheets, and columns represent the objects for each sprite
             # [[...],[...],[...]]
             # [.................] = List of sprite sheets
@@ -682,10 +682,10 @@ class RenderSprites_OT_Operator(bpy.types.Operator):
                                     anim_start = None
                                     anim_end = 0
                                     for strip in strips:
-                                        if strip.action_frame_end > anim_end:
-                                            anim_end = int(strip.action_frame_end)
-                                        if anim_start == None or strip.action_frame_start < anim_start:
-                                            anim_start = int(strip.action_frame_start)
+                                        if strip.frame_end > anim_end:
+                                            anim_end = int(strip.frame_end)
+                                        if anim_start == None or strip.frame_start < anim_start:
+                                            anim_start = int(strip.frame_start)
                                     # Render each frame
                                     for frame in range(anim_start, anim_end + 1):
                                         scn.frame_set(frame)
@@ -693,7 +693,7 @@ class RenderSprites_OT_Operator(bpy.types.Operator):
                                         # Each render will have the format:
                                         # <sprite_sheet_name>_<object_name>_<cam_name>_<angle>_<track_name>_<frame_number>.png
                                         output_name = "{}_{}_{}_{}_{}_{}{}".format(sheet_name, obj.name, track.name, cam.name, int(i_angle * (360 / addon_prop.int_camera_angles)), str(frame).zfill(3), scn.render.file_extension)
-                                        scn.render.filepath = ''.join(output_folder, output_name)
+                                        scn.render.filepath = ''.join((output_folder, output_name))
                                         #print(scn.render.filepath)
                                         bpy.ops.render.render(write_still=True)
                                     # If not 'OFF' merge frames into angle
@@ -701,7 +701,7 @@ class RenderSprites_OT_Operator(bpy.types.Operator):
                                         source_folder = output_folder
                                         save_folder = "{}{}\\{}\\{}\\{}\\".format(addon_prop.string_output_path, sheet_name, obj.name, track.name, cam.name)
                                         save_name = "{}_{}_{}_{}_{}{}".format(sheet_name, obj.name, track.name, cam.name, int(i_angle * (360 / addon_prop.int_camera_angles)), scn.render.file_extension)
-                                        merge_images(source_folder, ''.join(save_folder, save_name), 'HORIZONTAL')
+                                        merge_images(source_folder, ''.join((save_folder, save_name)), 'HORIZONTAL')
                                         # If renders not being kept, remove them
                                         if addon_prop.bool_keep_renders == False:
                                             remove_folder(source_folder)
@@ -714,7 +714,7 @@ class RenderSprites_OT_Operator(bpy.types.Operator):
                                     source_folder = "{}{}\\{}\\{}\\{}\\".format(addon_prop.string_output_path, sheet_name, obj.name, track.name, cam.name)
                                     save_folder = "{}{}\\{}\\{}\\".format(addon_prop.string_output_path, sheet_name, obj.name, track.name)
                                     save_name = "{}_{}_{}_{}{}".format(sheet_name, obj.name, track.name, cam.name, scn.render.file_extension)
-                                    merge_images(source_folder, ''.join(save_folder, save_name), 'VERTICAL')
+                                    merge_images(source_folder, ''.join((save_folder, save_name)), 'VERTICAL')
                                     # If renders not being kept, remove them
                                     if addon_prop.bool_keep_renders == False:
                                         remove_folder(source_folder)
@@ -725,7 +725,7 @@ class RenderSprites_OT_Operator(bpy.types.Operator):
                                 source_folder = "{}{}\\{}\\{}\\".format(addon_prop.string_output_path, sheet_name, obj.name, track.name)
                                 save_folder = "{}{}\\{}\\".format(addon_prop.string_output_path, sheet_name, obj.name)
                                 save_name = "{}_{}_{}{}".format(sheet_name, obj.name, track.name, scn.render.file_extension)
-                                merge_images(source_folder, ''.join(save_folder, save_name), 'HORIZONTAL')
+                                merge_images(source_folder, ''.join((save_folder, save_name)), 'HORIZONTAL')
                                 # If renders not being kept, remove them
                                 if addon_prop.bool_keep_renders == False:
                                     remove_folder(source_folder)
@@ -737,7 +737,7 @@ class RenderSprites_OT_Operator(bpy.types.Operator):
                             source_folder = "{}{}\\{}\\".format(addon_prop.string_output_path, sheet_name, obj.name)
                             save_folder = "{}{}\\".format(addon_prop.string_output_path, sheet_name)
                             save_name = "{}_{}{}".format(sheet_name, obj.name, scn.render.file_extension)
-                            merge_images(source_folder, ''.join(save_folder, save_name), 'VERTICAL')
+                            merge_images(source_folder, ''.join((save_folder, save_name)), 'VERTICAL')
                             # If renders not being kept, remove them
                             if addon_prop.bool_keep_renders == False:
                                 remove_folder(source_folder)
@@ -765,7 +765,7 @@ class RenderSprites_OT_Operator(bpy.types.Operator):
                                 # Each render will have the format:
                                 # <sprite_sheet_name>_<object_name>_<cam_name>_<angle>.png
                                 output_name = "{}_{}_{}_{}{}".format(sheet_name, obj.name, cam.name, int(i_angle * (360 / addon_prop.int_camera_angles)), scn.render.file_extension)
-                                scn.render.filepath = ''.join(output_folder, output_name)
+                                scn.render.filepath = ''.join((output_folder, output_name))
                                 #print(scn.render.filepath)
                                 bpy.ops.render.render(write_still=True)
                             # Hide camera hierarchy
@@ -777,7 +777,7 @@ class RenderSprites_OT_Operator(bpy.types.Operator):
                                 source_folder = "{}{}\\{}\\{}\\".format(addon_prop.string_output_path, sheet_name, obj.name, cam.name)
                                 save_folder = "{}{}\\{}\\".format(addon_prop.string_output_path, sheet_name, obj.name)
                                 save_name = "{}_{}_{}{}".format(sheet_name, obj.name, cam.name, scn.render.file_extension)
-                                merge_images(source_folder, ''.join(save_folder, save_name), 'HORIZONTAL')
+                                merge_images(source_folder, ''.join((save_folder, save_name)), 'HORIZONTAL')
                                 # If renders not being kept, remove them
                                 if addon_prop.bool_keep_renders == False:
                                     remove_folder(source_folder)
@@ -786,7 +786,7 @@ class RenderSprites_OT_Operator(bpy.types.Operator):
                             source_folder = "{}{}\\{}\\".format(addon_prop.string_output_path, sheet_name, obj.name)
                             save_folder = "{}{}\\".format(addon_prop.string_output_path, sheet_name)
                             save_name = "{}_{}{}".format(sheet_name, obj.name, scn.render.file_extension)
-                            merge_images(source_folder, ''.join(save_folder, save_name), 'HORIZONTAL')
+                            merge_images(source_folder, ''.join((save_folder, save_name)), 'HORIZONTAL')
                             # If renders not being kept, remove them
                             if addon_prop.bool_keep_renders == False:
                                 remove_folder(source_folder)
@@ -799,7 +799,7 @@ class RenderSprites_OT_Operator(bpy.types.Operator):
                     source_folder = "{}{}\\".format(addon_prop.string_output_path, sheet_name)
                     save_folder = "{}".format(addon_prop.string_output_path)
                     save_name = "{}{}".format(sheet_name, scn.render.file_extension)
-                    merge_images(source_folder, ''.join(save_folder, save_name), 'VERTICAL')
+                    merge_images(source_folder, ''.join((save_folder, save_name)), 'VERTICAL')
                     # If renders not being kept, remove them
                     if addon_prop.bool_keep_renders == False:
                         remove_folder(source_folder)
@@ -895,26 +895,26 @@ class ADDON_PT_SetupPanel(bpy.types.Panel):
 
         col = layout.column(align=True)
         col.label(text="Camera Parents:")
-        col.prop(addon_prop, 'pointer_top_parent')
-        error = validate_top_parent(self, context)
+        col.prop(addon_prop, 'pointer_camera_one')
+        error = validate_camera_one(self, context)
         if not error == None:
             box = col.box()
             box.label(text=error)
 
-        col.prop(addon_prop, 'pointer_dime_parent')
-        error = validate_dime_parent(self, context)
+        col.prop(addon_prop, 'pointer_camera_two')
+        error = validate_camera_two(self, context)
         if not error == None:
             box = col.box()
             box.label(text=error)
 
-        col.prop(addon_prop, 'pointer_side_parent')
-        error = validate_side_parent(self, context)
+        col.prop(addon_prop, 'pointer_camera_three')
+        error = validate_camera_three(self, context)
         if error != None:
             box = col.box()
             box.label(text=error)
 
-        col.prop(addon_prop, 'pointer_bird_parent')
-        error = validate_bird_parent(self, context)
+        col.prop(addon_prop, 'pointer_camera_four')
+        error = validate_camera_four(self, context)
         if not error == None:
             box = col.box()
             box.label(text=error)
