@@ -548,7 +548,7 @@ class CreateBirdCamera_OT_Operator(bpy.types.Operator):
         cam = bpy.context.active_object
         bpy.context.scene.camera = cam
         cam.name = "Camera_BirdsEye"
-        cam.rotation_euler = (math.radians(270), math.radians(0), math.radians(0))
+        cam.rotation_euler = (math.radians(0), math.radians(0), math.radians(0))
         cam.data.type = 'ORTHO'
         # Initialise the scale based on object size
         ortho_scale = addon_prop.float_object_size
