@@ -622,7 +622,7 @@ class RenderSprites_OT_Operator(bpy.types.Operator):
                 cam_orig_rotation.append(addon_prop.pointer_camera_two.rotation_euler)
             if addon_prop.pointer_camera_three != None:
                 cameras.append(addon_prop.pointer_camera_three)
-                cam_orig_rotation.append(addon_prop.pointer_scamera_three.rotation_euler)
+                cam_orig_rotation.append(addon_prop.pointer_camera_three.rotation_euler)
             if addon_prop.pointer_camera_four != None:
                 cameras.append(addon_prop.pointer_camera_four)
                 cam_orig_rotation.append(addon_prop.pointer_camera_four.rotation_euler)
