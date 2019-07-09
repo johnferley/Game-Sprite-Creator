@@ -686,7 +686,7 @@ class RenderSprites_OT_Operator(bpy.types.Operator):
                                     cam.rotation_euler.z = math.radians(i_angle * (360 / addon_prop.int_camera_angles))
                                     # Set render path
                                     # <sprite_sheet_name>\<object_name>\<camera_name>\<angle>\<track_name>
-                                    output_folder = "{}{}\\{}\\{}\\{}\\{}\\".format(addon_prop.string_output_path, sheet_name, obj.name, track.name, cam.name, str(int(i_angle * (360 / addon_prop.int_camera_angles))).zfil(3))
+                                    output_folder = "{}{}\\{}\\{}\\{}\\{}\\".format(addon_prop.string_output_path, sheet_name, obj.name, track.name, cam.name, str(int(i_angle * (360 / addon_prop.int_camera_angles))).zfill(3))
                                     # Get nla track start and end frames
                                     strips = track.strips
                                     anim_start = None
@@ -702,7 +702,7 @@ class RenderSprites_OT_Operator(bpy.types.Operator):
                                         # Set render file name
                                         # Each render will have the format:
                                         # <sprite_sheet_name>_<object_name>_<cam_name>_<angle>_<track_name>_<frame_number>.png
-                                        output_name = "{}_{}_{}_{}_{}_{}{}".format(sheet_name, obj.name, track.name, cam.name, str(int(i_angle * (360 / addon_prop.int_camera_angles))).zfil(3), str(frame).zfill(3), scn.render.file_extension)
+                                        output_name = "{}_{}_{}_{}_{}_{}{}".format(sheet_name, obj.name, track.name, cam.name, str(int(i_angle * (360 / addon_prop.int_camera_angles))).zfill(3), str(frame).zfill(3), scn.render.file_extension)
                                         scn.render.filepath = ''.join((output_folder, output_name))
                                         #print(scn.render.filepath)
                                         bpy.ops.render.render(write_still=True)
@@ -710,7 +710,7 @@ class RenderSprites_OT_Operator(bpy.types.Operator):
                                     if addon_prop.enum_sprite_sheet != 'OFF':
                                         source_folder = output_folder
                                         save_folder = "{}{}\\{}\\{}\\{}\\".format(addon_prop.string_output_path, sheet_name, obj.name, track.name, cam.name)
-                                        save_name = "{}_{}_{}_{}_{}{}".format(sheet_name, obj.name, track.name, cam.name, str(int(i_angle * (360 / addon_prop.int_camera_angles))).zfil(3), scn.render.file_extension)
+                                        save_name = "{}_{}_{}_{}_{}{}".format(sheet_name, obj.name, track.name, cam.name, str(int(i_angle * (360 / addon_prop.int_camera_angles))).zfill(3), scn.render.file_extension)
                                         merge_images(source_folder, ''.join((save_folder, save_name)), 'HORIZONTAL')
                                         # If renders not being kept, remove them
                                         if addon_prop.bool_keep_renders == False:
@@ -780,7 +780,7 @@ class RenderSprites_OT_Operator(bpy.types.Operator):
                                 # Set render file name
                                 # Each render will have the format:
                                 # <sprite_sheet_name>_<object_name>_<cam_name>_<angle>.png
-                                output_name = "{}_{}_{}_{}{}".format(sheet_name, obj.name, cam.name, str(int(i_angle * (360 / addon_prop.int_camera_angles))).zfil(3), scn.render.file_extension)
+                                output_name = "{}_{}_{}_{}{}".format(sheet_name, obj.name, cam.name, str(int(i_angle * (360 / addon_prop.int_camera_angles))).zfill(3), scn.render.file_extension)
                                 scn.render.filepath = ''.join((output_folder, output_name))
                                 #print(scn.render.filepath)
                                 bpy.ops.render.render(write_still=True)
