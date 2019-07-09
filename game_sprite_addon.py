@@ -10,10 +10,6 @@ try:
 except ImportError:
     pil_installed = False
 
-# Define Global Constants
-# Allow this to be adjusted?
-# Need to check if code will work at any origin without changes
-ORIGIN = mathutils.Vector((0.0, 0.0, 0.0))
 
 class AddonProperties(bpy.types.PropertyGroup):
     """Declare properties to be used by the addon."""
@@ -192,7 +188,7 @@ def validate_camera_parent(caller, context):
 # Validate the top parent selection
 def validate_camera_one(caller, context):
     """Validate the first camera parent selection box.
-    The parent must be an Empty object, positioned at the origin.
+    The parent must be an Empty object.
     There must be a child Camera object.
     """
 
@@ -203,8 +199,6 @@ def validate_camera_one(caller, context):
     if addon_prop.pointer_camera_one != None:
         if addon_prop.pointer_camera_one.type != 'EMPTY':
             error = "* {0} must be an empty".format(addon_prop.pointer_camera_one.name)
-        elif addon_prop.pointer_camera_one.location != ORIGIN:
-            error = "* {0} must be at ({1},{2},{3})".format(addon_prop.pointer_camera_one.name, ORIGIN[0], ORIGIN[1], ORIGIN[2])
         elif len(find_children(addon_prop.pointer_camera_one, 'CAMERA')) == 0:
             error = "* {0} does not have a child camera".format(addon_prop.pointer_camera_one.name)
 
@@ -214,7 +208,7 @@ def validate_camera_one(caller, context):
 # Validate the dimetric parent selection
 def validate_camera_two(caller, context):
     """Validate the second camera parent selection box.
-    The parent must be an Empty object, positioned at the origin.
+    The parent must be an Empty object.
     There must be a child Camera object.
     """
 
@@ -225,8 +219,6 @@ def validate_camera_two(caller, context):
     if addon_prop.pointer_camera_two != None:
         if addon_prop.pointer_camera_two.type != 'EMPTY':
             error = "* {0} must be an empty".format(addon_prop.pointer_camera_two.name)
-        elif addon_prop.pointer_camera_two.location != ORIGIN:
-            error = "* {0} must be at ({1},{2},{3})".format(addon_prop.pointer_camera_two.name, ORIGIN[0], ORIGIN[1], ORIGIN[2])
         elif len(find_children(addon_prop.pointer_camera_two, 'CAMERA')) == 0:
             error = "* {0} does not have a child camera".format(addon_prop.pointer_camera_two.name)
 
@@ -236,7 +228,7 @@ def validate_camera_two(caller, context):
 # Validate the side parent selection
 def validate_camera_three(caller, context):
     """Validate the third camera parent selection box.
-    The parent must be an Empty object, positioned at the origin.
+    The parent must be an Empty object.
     There must be a child Camera object.
     """
 
@@ -247,8 +239,6 @@ def validate_camera_three(caller, context):
     if addon_prop.pointer_camera_three != None:
         if addon_prop.pointer_camera_three.type != 'EMPTY':
             error = "* {0} must be an empty".format(addon_prop.pointer_camera_three.name)
-        elif addon_prop.pointer_camera_three.location != ORIGIN:
-            error = "* {0} must be at ({1},{2},{3})".format(addon_prop.pointer_camera_three.name, ORIGIN[0], ORIGIN[1], ORIGIN[2])
         elif len(find_children(addon_prop.pointer_camera_three, 'CAMERA')) == 0:
             error = "* {0} does not have a child camera".format(addon_prop.pointer_camera_three.name)
 
@@ -258,7 +248,7 @@ def validate_camera_three(caller, context):
 # Validate the bird's eye view parent selection
 def validate_camera_four(caller, context):
     """Validate the fourth camera parent selection box.
-    The parent must be an Empty object, positioned at the origin.
+    The parent must be an Empty object.
     There must be a child Camera object.
     """
 
@@ -269,8 +259,6 @@ def validate_camera_four(caller, context):
     if addon_prop.pointer_camera_four != None:
         if addon_prop.pointer_camera_four.type != 'EMPTY':
             error = "* {0} must be an empty".format(addon_prop.pointer_camera_four.name)
-        elif addon_prop.pointer_camera_four.location != ORIGIN:
-            error = "* {0} must be at ({1},{2},{3})".format(addon_prop.pointer_camera_four.name, ORIGIN[0], ORIGIN[1], ORIGIN[2])
         elif len(find_children(addon_prop.pointer_camera_four, 'CAMERA')) == 0:
             error = "* {0} does not have a child camera".format(addon_prop.pointer_camera_four.name)
 
@@ -280,7 +268,7 @@ def validate_camera_four(caller, context):
 # Validate the output parent selection
 def validate_output_parent(caller, context):
     """Validate the output parent selection box
-    The parent must be an Empty object, positioned at the origin.
+    The parent must be an Empty object.
     The parent must have at least one child object.
 
     The hierarchy of objects must match a specific pattern depending on the option selected in the Sprite Sheet dropdown:
@@ -300,8 +288,7 @@ def validate_output_parent(caller, context):
             L Sprite Parent
                 L ...
     Where:
-        Object Parents must be at the origin.
-        Sprite Sheet Parents must be an Empty, at the origin and have at least one child.
+        Sprite Sheet Parents must be an Empty and have at least one child.
     """
 
     addon_prop = context.scene.addon_properties
@@ -313,8 +300,6 @@ def validate_output_parent(caller, context):
     else:
         if addon_prop.pointer_output_parent.type != 'EMPTY':
             error = "* {0} must be an empty".format(addon_prop.pointer_output_parent.name)
-        elif addon_prop.pointer_output_parent.location != ORIGIN:
-            error = "* {0} must be at ({1},{2},{3})".format(addon_prop.pointer_output_parent.name, ORIGIN[0], ORIGIN[1], ORIGIN[2])
         elif len(find_children(addon_prop.pointer_output_parent)) == 0:
             error = "* {0} has no children".format(addon_prop.pointer_output_parent.name)
         else:
@@ -323,20 +308,11 @@ def validate_output_parent(caller, context):
             children = find_children(addon_prop.pointer_output_parent)
             error = []
             for child in children:
-                if addon_prop.enum_sprite_sheet in ('OFF', 'OUTPUT', 'OBJECT'):
-                    if child.location != ORIGIN:
-                        error.append("{0} must be at ({1},{2},{3})".format(child.name, ORIGIN[0], ORIGIN[1], ORIGIN[2]))
-                elif addon_prop.enum_sprite_sheet == 'SPRITE':
+                if addon_prop.enum_sprite_sheet == 'SPRITE':
                     if child.type != 'EMPTY':
                         error.append("{0} must be empty".format(child.name))
-                    elif child.location != ORIGIN:
-                        error.append("{0} must be at ({1},{2},{3})".format(child.name, ORIGIN[0], ORIGIN[1], ORIGIN[2]))
                     elif len(find_children(child)) == 0:
                         error.append("{0} has no children".format(child.name))
-                    else:
-                        for sub_child in find_children(child):
-                            if sub_child.location != ORIGIN:
-                                error.append("{0} must be at ({1},{2},{3})".format(sub_child.name, ORIGIN[0], ORIGIN[1], ORIGIN[2]))
     if error == []:
         error = None
     return error
@@ -418,7 +394,7 @@ class CreateOrthoTemplate_OT_Operator(bpy.types.Operator):
         bpy.ops.object.select_all(action='DESELECT')
 
         # Create cubes representing grid spaces in a dimetric (2:1 isometric) view
-        bpy.ops.mesh.primitive_cube_add(size=1.0, location=ORIGIN)
+        bpy.ops.mesh.primitive_cube_add(size=1.0, location=bpy.context.scene.cursor.location)
         block_1 = bpy.context.active_object
         block_z = 1
         bpy.ops.transform.translate(value=(0, 0, block_z / 2))
@@ -447,7 +423,7 @@ class CreateDimeTemplate_OT_Operator(bpy.types.Operator):
         bpy.ops.object.select_all(action='DESELECT')
 
         # Create cube representing grid space in a dimetric (2:1 isometric) view
-        bpy.ops.mesh.primitive_cube_add(size=1.0, location=ORIGIN)
+        bpy.ops.mesh.primitive_cube_add(size=1.0, location=bpy.context.scene.cursor.location)
         block_1 = bpy.context.active_object
         block_z = math.sqrt(2) * math.tan(math.radians(30))
         bpy.ops.transform.resize(value=(1, 1, block_z))
@@ -459,7 +435,7 @@ class CreateDimeTemplate_OT_Operator(bpy.types.Operator):
 
 
 class CreateTopCamera_OT_Operator(bpy.types.Operator):
-    """Create a top down orthographic camera at the origin.
+    """Create a top down orthographic camera at the cursor.
     This points at 45 degrees from vertical.
     The orthographic scale is set based on the specified object size and ratio.
     """
@@ -473,7 +449,7 @@ class CreateTopCamera_OT_Operator(bpy.types.Operator):
         addon_prop = context.scene.addon_properties
 
         # Create a Top Down Camera
-        bpy.ops.object.camera_add(location=ORIGIN)
+        bpy.ops.object.camera_add(location=bpy.context.scene.cursor.location)
         cam = bpy.context.active_object
         bpy.context.scene.camera = cam
         cam.name = "Camera_TopDown"
@@ -490,7 +466,7 @@ class CreateTopCamera_OT_Operator(bpy.types.Operator):
 
 
 class CreateDimeCamera_OT_Operator(bpy.types.Operator):
-    """Create a dimetric orthographic camera at the origin.
+    """Create a dimetric orthographic camera at the cursor.
     This uses an angle of 60 degrees from vertical to create a 2:1 Isometric view.
     The orthographic scale is set based on the specified object size and ratio.
     """
@@ -506,7 +482,7 @@ class CreateDimeCamera_OT_Operator(bpy.types.Operator):
         orth_scale_dime = math.sqrt(addon_prop.float_object_size**2 + addon_prop.float_object_size**2)
 
         # Create a Dimetric (2:1 Isometric) Camera
-        bpy.ops.object.camera_add(location=ORIGIN)
+        bpy.ops.object.camera_add(location=bpy.context.scene.cursor.location)
         cam = bpy.context.active_object
         bpy.context.scene.camera = cam
         cam.name = "Camera_Dimetric"
@@ -523,7 +499,7 @@ class CreateDimeCamera_OT_Operator(bpy.types.Operator):
 
 
 class CreateSideCamera_OT_Operator(bpy.types.Operator):
-    """Create a side orthographic camera at the origin.
+    """Create a side orthographic camera at the cursor.
     This points horizontally.
     The orthographic scale is set based on the specified object size and ratio.
     """
@@ -537,7 +513,7 @@ class CreateSideCamera_OT_Operator(bpy.types.Operator):
         addon_prop = context.scene.addon_properties
 
         # Create a Side View Camera
-        bpy.ops.object.camera_add(location=ORIGIN)
+        bpy.ops.object.camera_add(location=bpy.context.scene.cursor.location)
         cam = bpy.context.active_object
         bpy.context.scene.camera = cam
         cam.name = "Camera_Side"
@@ -554,7 +530,7 @@ class CreateSideCamera_OT_Operator(bpy.types.Operator):
 
 
 class CreateBirdCamera_OT_Operator(bpy.types.Operator):
-    """Create a birds eye view orthographic camera at the origin.
+    """Create a birds eye view orthographic camera at the cursor.
     This points vertically downwards.
     The orthographic scale is set based on the specified object size and ratio.
     """
@@ -568,7 +544,7 @@ class CreateBirdCamera_OT_Operator(bpy.types.Operator):
         addon_prop = context.scene.addon_properties
 
         # Create a Bird's Eye View Camera
-        bpy.ops.object.camera_add(location=ORIGIN)
+        bpy.ops.object.camera_add(location=bpy.context.scene.cursor.location)
         cam = bpy.context.active_object
         bpy.context.scene.camera = cam
         cam.name = "Camera_BirdsEye"
@@ -698,6 +674,12 @@ class RenderSprites_OT_Operator(bpy.types.Operator):
                                 for child in find_children(cam):
                                     child.hide_render = False
                                 scn.camera = obj_cam
+                                # Move Camera to object
+                                cam_orig_location = cam.location
+                                cam.location = obj.matrix_world.to_translation()
+                                # Move Global to object
+                                global_parent_orig_location = global_parent.location
+                                global_parent.location = obj.matrix_world.to_translation()
                                 # For each angle
                                 for i_angle in range(0, addon_prop.int_camera_angles):
                                     # Rotate camera
@@ -746,6 +728,10 @@ class RenderSprites_OT_Operator(bpy.types.Operator):
                                     # If renders not being kept, remove them
                                     if addon_prop.bool_keep_renders == False:
                                         remove_folder(source_folder)
+                                # Reset Camera location
+                                cam.location = cam_orig_location
+                                # Rest Global location
+                                global_parent.location = global_parent_orig_location
                             # Mute this track
                             track.mute = True
                             # If not 'OFF' merge cameras into track
@@ -778,6 +764,12 @@ class RenderSprites_OT_Operator(bpy.types.Operator):
                             for child in find_children(cam):
                                 child.hide_render = False
                             scn.camera = obj_cam
+                            # Move Camera to object
+                            cam_orig_location = cam.location
+                            cam.location = obj.matrix_world.to_translation()
+                            # Move Global to object
+                            global_parent_orig_location = global_parent.location
+                            global_parent.location = obj.matrix_world.to_translation()
                             # For each angle
                             for i_angle in range(0, addon_prop.int_camera_angles):
                                 # Rotate camera
@@ -805,6 +797,10 @@ class RenderSprites_OT_Operator(bpy.types.Operator):
                                 # If renders not being kept, remove them
                                 if addon_prop.bool_keep_renders == False:
                                     remove_folder(source_folder)
+                            # Reset Camera location
+                            cam.location = cam_orig_location
+                            # Rest Global location
+                            global_parent.location = global_parent_orig_location
                         # If not 'OFF' merge cameras into object
                         if addon_prop.enum_sprite_sheet != 'OFF':
                             source_folder = "{}{}\\{}\\".format(addon_prop.string_output_path, sheet_name, obj.name)
