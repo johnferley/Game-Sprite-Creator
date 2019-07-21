@@ -607,9 +607,10 @@ class RenderSprites_OT_Operator(bpy.types.Operator):
                 obj.hide_render = True
             # Unhide global parent hierarchy
             global_parent = addon_prop.pointer_global_parent
-            global_parent.hide_render = False
-            for child in find_children(global_parent):
-                child.hide_render = False
+            if global_parent != None:
+                global_parent.hide_render = False
+                for child in find_children(global_parent):
+                    child.hide_render = False
             # Get parents
             output = addon_prop.pointer_output_parent
             cameras = []
@@ -678,8 +679,9 @@ class RenderSprites_OT_Operator(bpy.types.Operator):
                                 cam_orig_location = cam.location
                                 cam.location = obj.matrix_world.to_translation()
                                 # Move Global to object
-                                global_parent_orig_location = global_parent.location
-                                global_parent.location = obj.matrix_world.to_translation()
+                                if global_parent != None:
+                                    global_parent_orig_location = global_parent.location
+                                    global_parent.location = obj.matrix_world.to_translation()
                                 # For each angle
                                 for i_angle in range(0, addon_prop.int_camera_angles):
                                     # Rotate camera
@@ -731,7 +733,8 @@ class RenderSprites_OT_Operator(bpy.types.Operator):
                                 # Reset Camera location
                                 cam.location = cam_orig_location
                                 # Rest Global location
-                                global_parent.location = global_parent_orig_location
+                                if global_parent != None:
+                                    global_parent.location = global_parent_orig_location
                             # Mute this track
                             track.mute = True
                             # If not 'OFF' merge cameras into track
@@ -768,8 +771,9 @@ class RenderSprites_OT_Operator(bpy.types.Operator):
                             cam_orig_location = cam.location
                             cam.location = obj.matrix_world.to_translation()
                             # Move Global to object
-                            global_parent_orig_location = global_parent.location
-                            global_parent.location = obj.matrix_world.to_translation()
+                            if global_parent != None:
+                                global_parent_orig_location = global_parent.location
+                                global_parent.location = obj.matrix_world.to_translation()
                             # For each angle
                             for i_angle in range(0, addon_prop.int_camera_angles):
                                 # Rotate camera
@@ -800,7 +804,8 @@ class RenderSprites_OT_Operator(bpy.types.Operator):
                             # Reset Camera location
                             cam.location = cam_orig_location
                             # Rest Global location
-                            global_parent.location = global_parent_orig_location
+                            if global_parent != None:
+                                global_parent.location = global_parent_orig_location
                         # If not 'OFF' merge cameras into object
                         if addon_prop.enum_sprite_sheet != 'OFF':
                             source_folder = "{}{}\\{}\\".format(addon_prop.string_output_path, sheet_name, obj.name)
