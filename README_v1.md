@@ -1,23 +1,10 @@
-# Game-Sprite-Creator v2beta
+# Game-Sprite-Creator v1
 Blender 2.8 addon for creating sprites for 2D games.
-
-## Changelog
-* Added move origin to floor function that sets the origin for selected objects so that z = 0.
-* Additional options to change the output grouping.
-* More complex scene resetting, takes into account original render visibility.
-
-## Notes on v2beta
-The main rendering loop has been dramatically changed from v1.
-The plugin has been tested, but only on a limited number of setting combinations, other combinations will be tested when I have time.
-Please report any bugs, and make sure to include the error log and the current settings.
-Rendering may take marginally longer than in v1, if you have a particularly large scene and can live without the changes above it may be preferable to continue using v1.
-Due to the changes Blender will no longer hang, pressing Esc or causing changes that require saving will cancel the rendering process.
 
 ## Features
 * Camera pre-sets for top down, dimetric/2:1 isometric, side view and bird's eye view cameras.
 * Automatic rendering of multiple objects to individual renders, including animations.
 * Automatic creation of sprite sheets using PIL.
-* Additional convenience tools
 
 ## Requirements
 In order to create the sprite sheets from the individual renders this plugin requires Python Pillow 6.1.0.
@@ -41,7 +28,7 @@ To install Pillow for Blender in Windows:
 
 ## How to use
 ### UI
-![UI Screenshot](https://github.com/johnferley/Game-Sprite-Creator/blob/master/images/ui_v2.png)
+![UI Screenshot](https://github.com/johnferley/Game-Sprite-Creator/blob/master/images/ui_v1.png)
 
 From top to bottom:
 1. Scene Setup section
@@ -68,10 +55,7 @@ From top to bottom:
    * Add
 
      Adds a camera rotated and scaled to match the specified type.
-
-   * Move Origin to Floor
-
-     Sets the origin of all selected objects so that z = 0.
+     The orthographic scale of the camera will be set based on Object Ratio and Object Size.
 
 2. Render Setup
    * No of Camera Angles
@@ -157,54 +141,18 @@ From top to bottom:
    * Output Path
 
      The folder to output the renders and sprite sheets to.
-     Sub-folders will be created containing all the renders based on Group Order as specified below.
+     Sub-folders will be created containing all the renders in the following pattern:
 
-     The rendered images will be named based on Group Order as specified below.
-     The merged sprite sheets will contain a subset of this file name based on the groups it's made up of.
+     'sprite sheet name\object name\camera name\angle\track name\'
 
-   * Group Order
+     The track name folder will not be included if the Object Parent has no NLA tracks.
 
-     The order in which to arrange the render folders and image merge grouping.
+     The rendered images will be named as follows:
 
-     Use the following values without quotes, separated by commas:
+     'sprite sheet name_object name_camera name_angle_track name_frame number.png'
 
-     * 'angle' - The camera angles as specified above.
-     * 'camera' - The cameras as specified above.
-     * 'frame' - The frames of each track, must be placed somewhere after 'track'.
-     * 'object' - The objects as specified above, must be placed somewhere after 'sheet'.
-     * 'sheet' - The sprite sheets as specified above, this must be the first element.
-     * 'track' - The animation tracks for each object, must be placed somewhere after 'object'.
-
-     All six values must be used, and follow the ordering rules as listed.
-
-     For example 'sheet,object,camera,track,angle,frame' will create files in the following path:
-     'output path\sheet\object\camera\track\angle\sheet_object_camera_track_angle_frame.png'
-     Note that the last level is not given a folder to avoid having folders containing a single file.
-
-     As the renders are merged levels will be stripped from the path.
-     For example after completing the frames loop for an angle the path would be:
-     'output path\sheet\object\camera\track\angle\sheet_object_camera_track_angle.png'
-
-   * Output Orientation
-
-     Sets the orientation each group gets merged in, if merging is enabled.
-
-     Use 'h' and 'v' separated by commas, with each value corresponding to a value in Group Order.
-
-     * 'h' - Merge the images horizontally
-     * 'v' - Merge the images vertically
-
-     The first group, which must be sheet, does not get merged and so has an orientation of '-'.
-     There must be a value for every group.
-
-     For example '-,v,h,v,v,h' with the example group above will set the orientations as follows:
-
-     * sheet - Not applicable, does not get merged.
-     * object - Merged vertically.
-     * camera - Merged horizontally.
-     * track - Merged vertically.
-     * angle - Merged vertically.
-     * frame - Merged horizontally.
+     The track name and frame number will be omitted if the Object Parent has no NLA tracks.
+     The merged sprite sheets will contain a subset of this file name based on the images it's made up of.
 
    * Render Sprites
 
@@ -220,27 +168,31 @@ The addon renders the scene based on its hierarchy, as detailed above, depending
 * For rendering all objects to a single large sheet:
 
   * Use the 'Based on Output Parent' Sprite Sheet option.
+  * Objects animations will first be rendered frame by frame and aligned horizontally.
+    These will then be merged vertically with the other animations for that object, and the animations for other objects.
   * For an example see 'example_output.blend'.
 
 * For rendering specific objects to specific sprite sheets:
 
   * Use the 'Based on Sprite Sheet Parent' Sprite Sheet option.
+  * Objects animations will first be rendered frame by frame and aligned horizontally.
+    These will then be merged vertically with the other animations for that object.
+    The object sheets will then be merged with other objects that are parented to the same Sprite Sheet Parent.
   * For an example see 'example_sprite.blend'.
 
 * For rendering objects to individual sprite sheets for each object:
 
   * Use the 'Based on Object Parent' Sprite Sheet option.
+  * Objects animations will be rendered frame by frame and aligned horizontally, with no further processing.
   * For an example see 'example_object.blend'.
 
 ### Rendering
-When running the process can be cancelled by pressing Esc.
-Making any changes that cause the file to require saving will also cause the process to end.
+When running Blender will appear to become unresponsive.
 It is recommended to display the System Console using the Window>Toggle System Console menu when running this addon as progress notifications will be output as the process runs.
-The render button will be disabled until the file has been saved and all errors have been fixed.
+It is also only possible to cancel the operation by forcing Blender to close, so the file must be saved before starting the rendering process.
+The render button will be disabled until the file has been saved.
 
-Large numbers of objects and long animations can cause the rendering process to take a long time.
-v2beta also takes slightly longer to run that v1.
-This may not be noticeable depending on the computer, however for large machines using v1 may allow for the rendering to be completed sooner.
+Large numbers of objects and long animations can cause the rendering process to take a long time
 
 ## License
 See [LICENSE.md](../master/LICENSE)

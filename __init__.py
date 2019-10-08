@@ -16,7 +16,7 @@ bl_info = {
     "author" : "John Ferley",
     "description" : "This addon can render orhtogrpahic 2D game sprites from a 3D scene",
     "blender" : (2, 80, 0),
-    "version" : (0, 0, 1),
+    "version" : (0, 0, 2),
     "location" : "",
     "warning" : "",
     "category" : "Generic"
@@ -33,6 +33,7 @@ classes = (
     CreateDimeCamera_OT_Operator,
     CreateSideCamera_OT_Operator,
     CreateBirdCamera_OT_Operator,
+    OriginToFloor_OT_Operator,
     LoadExample_OT_Operator,
     RenderSprites_OT_Operator,
     OBJECT_MT_TemplateMenu,
