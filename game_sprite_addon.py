@@ -1056,10 +1056,10 @@ class RenderSprites():
             child.hide_render = True
         scn.camera = self.orig_scene_camera
         # Reset camera
-        if self.cam_orig_location:
+        if self.cam_orig_location != None:
             self.cameras[self.i_current_camera].location = self.cam_orig_location
             self.cam_orig_location = None
-        if self.cam_orig_rotation:
+        if self.cam_orig_rotation != None:
             self.cameras[self.i_current_camera].rotation_euler.z = self.cam_orig_rotation
             self.cam_orig_rotation = None
         # Reset global
@@ -1067,7 +1067,7 @@ class RenderSprites():
             global_parent.location = self.global_parent_orig_location
             self.global_parent_orig_location = None
         # Reset frame
-        if self.orig_frame:
+        if self.orig_frame != None:
             scn.frame_set(self.orig_frame)
             self.orig_frame = None
 

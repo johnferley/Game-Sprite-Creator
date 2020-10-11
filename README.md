@@ -2,9 +2,15 @@
 Blender 2.8 addon for creating sprites for 2D games.
 
 ## Changelog
-* Added move origin to floor function that sets the origin for selected objects so that z = 0.
-* Additional options to change the output grouping.
-* More complex scene resetting, takes into account original render visibility.
+* v2.1
+  * Corrected the rotation of the Dimetric Parent in the example scene so that it is 0&#176; rather than 315&#176;.
+  * Corrected pip installation command (--update had been auto-formatted to –update).
+  * The scene should now be correctly reset after the script has run.
+
+* v2.0beta
+  * Added move origin to floor function that sets the origin for selected objects so that z = 0.
+  * Additional options to change the output grouping.
+  * More complex scene resetting, takes into account original render visibility.
 
 ## Notes on v2beta
 The main rendering loop has been dramatically changed from v1.
@@ -33,7 +39,7 @@ To install Pillow for Blender in Windows:
 
    `.\python -m ensurepip`
 
-   `.\python -m pip install –upgrade pip setuptools wheel`
+   `.\python -m pip install --upgrade pip setuptools wheel`
 
 4. Install Pillow:
 
